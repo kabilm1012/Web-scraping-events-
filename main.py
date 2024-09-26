@@ -15,4 +15,4 @@ if __name__ == "__main__":
     if extracted != "No upcoming tours":
         if extracted not in data:
             store("data.txt", extracted)
-            send_email()
+            send_email(extracted)
