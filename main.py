@@ -1,6 +1,7 @@
 from webscrape import scrape, extract
-from textdata import read, store
+from database_handling import read, store
 from send_email import send_email
+import time
 
 URL = "https://programmer100.pythonanywhere.com/tours/"
 HEADERS = {
@@ -8,11 +9,14 @@ HEADERS = {
 
 
 if __name__ == "__main__":
-    scraped = scrape(URL, HEADERS)
-    extracted = extract(scraped)
-    print(extracted)
-    data = read("data.txt")
-    if extracted != "No upcoming tours":
-        if extracted not in data:
-            store("data.txt", extracted)
-            send_email(extracted)
+    while True:
+        scraped = scrape(URL, HEADERS)
+        extracted = extract(scraped)
+        print(extracted)
+
+        if extracted != "No upcoming tours":
+            row = read(extracted)
+            if not row:
+                store(extracted)
+                send_email(extracted)
+        time.sleep(2)
